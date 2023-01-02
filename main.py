@@ -1,7 +1,7 @@
 import telebot
-from telebot import types
-
 import config
+
+from telebot import types
 
 bot = telebot.TeleBot(config.TOKEN)
 
@@ -15,8 +15,8 @@ def start(message):
     markup.add(item1)
     markup.add(item2, item3)
     bot.send_message(message.chat.id, 'Привіт!👋 \nНатисни: \n'
-                                      'Інша система числення '' - для кодування вашого числа у іншу систему числення\n' 
-                                      'Коди - для кодування вашого числа у інші коди\n' 
+                                      'Інша система числення '' - для кодування вашого числа у іншу систему числення\n'
+                                      'Коди - для кодування вашого числа у інші коди\n'
                                       'Шифри - для шифрування вашого повідомлення', reply_markup=markup)
 
 
@@ -45,7 +45,7 @@ def check_callback_data(message):
         keyboard.row(
             types.InlineKeyboardButton('20', callback_data='code_20')
         )
-        bot.send_message(message.chat.id, "Виберіть систему числення", reply_markup=keyboard)
+        bot.send_message(message.chat.id, 'Виберіть систему числення', reply_markup=keyboard)
 
     elif message.text == 'Коди':
         keyboard = types.InlineKeyboardMarkup()
@@ -60,7 +60,7 @@ def check_callback_data(message):
         keyboard.row(
             types.InlineKeyboardButton('З перевіркою на парність', callback_data='code_zpp')
         )
-        bot.send_message(message.chat.id, "Виберіть код", reply_markup=keyboard)
+        bot.send_message(message.chat.id, 'Виберіть код', reply_markup=keyboard)
 
     elif message.text == 'Шифри':
         keyboard = types.InlineKeyboardMarkup()
@@ -68,11 +68,14 @@ def check_callback_data(message):
             types.InlineKeyboardButton('Цезаря', callback_data='cipher_c'),
             types.InlineKeyboardButton('Віженера', callback_data='cipher_v')
         )
-        bot.send_message(message.chat.id, "Виберіть шифр", reply_markup=keyboard)
+        keyboard.row(
+            types.InlineKeyboardButton('Атбаш', callback_data='cipher_a'),
+        )
+        bot.send_message(message.chat.id, 'Виберіть шифр', reply_markup=keyboard)
 
 
 @bot.callback_query_handler(func=lambda callback: callback.data)
-def callback_query_but1(callback):
+def callback_query_butns(callback):
     if callback.data == 'code_2':
         dec_bin = bot.send_message(callback.message.chat.id, 'Введіть десяткове число:')
         bot.register_next_step_handler(dec_bin, binary)
@@ -94,9 +97,6 @@ def callback_query_but1(callback):
     elif callback.data == 'code_8':
         dec_oct = bot.send_message(callback.message.chat.id, 'Введіть десяткове число:')
         bot.register_next_step_handler(dec_oct, octal)
-    elif callback.data == 'code_9':
-        dec_nin = bot.send_message(callback.message.chat.id, 'Введіть десяткове число:')
-        bot.register_next_step_handler(dec_nin, nintn)
     elif callback.data == 'code_9':
         dec_nin = bot.send_message(callback.message.chat.id, 'Введіть десяткове число:')
         bot.register_next_step_handler(dec_nin, nintn)
@@ -138,25 +138,29 @@ def callback_query_but1(callback):
     elif callback.data == 'cipher_v':
         vijener_key = bot.send_message(callback.message.chat.id, 'Введіть ключ (слово):')
         bot.register_next_step_handler(vijener_key, cipher_vijener_key)
+    elif callback.data == 'cipher_a':
+        atbash_ciph = bot.send_message(callback.message.chat.id, 'Введіть ваше повідомлення українською мовою:')
+        bot.register_next_step_handler(atbash_ciph, cipher_atbash_coder)
 
 
 @bot.message_handler(content_types=["text"])
 def binary(message):
     try:
-        binar = message.text
-        intgr = int(binar)
-        con_bin = bin(intgr)
+        user_mesg = message.text
+        intgr2 = int(user_mesg)
+        con_bin = bin(intgr2)
         bot.send_message(message.chat.id, f'Ваше двійкове число - {con_bin[2:]}')
     except Exception:
         b = bot.send_message(message.chat.id, 'Схоже ви ввели число не вірно, спробуйте ввести його ще раз:')
         bot.register_next_step_handler(b, binary)
 
+
 def triple(message):
     try:
         digits_three = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
         r = ""
-        tripl = message.text
-        intgr3 = int(tripl)
+        user_mesg = message.text
+        intgr3 = int(user_mesg)
         while intgr3 > 0:
             k = intgr3 % 3
             r = digits_three[k] + r
@@ -166,12 +170,13 @@ def triple(message):
         t = bot.send_message(message.chat.id, 'Схоже ви ввели число не вірно, спробуйте ввести його ще раз:')
         bot.register_next_step_handler(t, triple)
 
+
 def quadruple(message):
     try:
         digits_four = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
         r = ""
-        quadrup = message.text
-        intgr4 = int(quadrup)
+        user_mesg = message.text
+        intgr4 = int(user_mesg)
         while intgr4 > 0:
             k = intgr4 % 4
             r = digits_four[k] + r
@@ -181,12 +186,13 @@ def quadruple(message):
         t = bot.send_message(message.chat.id, 'Схоже ви ввели число не вірно, спробуйте ввести його ще раз:')
         bot.register_next_step_handler(t, quadruple)
 
+
 def five(message):
     try:
         digits_five = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
         r = ""
-        fiv = message.text
-        intgr5 = int(fiv)
+        user_mesg = message.text
+        intgr5 = int(user_mesg)
         while intgr5 > 0:
             k = intgr5 % 5
             r = digits_five[k] + r
@@ -196,12 +202,13 @@ def five(message):
         t = bot.send_message(message.chat.id, 'Схоже ви ввели число не вірно, спробуйте ввести його ще раз:')
         bot.register_next_step_handler(t, five)
 
+
 def sixtn(message):
     try:
         digits_six = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
         r = ""
-        sixt = message.text
-        intgr6 = int(sixt)
+        user_mesg = message.text
+        intgr6 = int(user_mesg)
         while intgr6 > 0:
             k = intgr6 % 6
             r = digits_six[k] + r
@@ -211,12 +218,13 @@ def sixtn(message):
         t = bot.send_message(message.chat.id, 'Схоже ви ввели число не вірно, спробуйте ввести його ще раз:')
         bot.register_next_step_handler(t, sixtn)
 
+
 def sevtn(message):
     try:
         digits_seven = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
         r = ""
-        sevt = message.text
-        intgr7 = int(sevt)
+        user_mesg = message.text
+        intgr7 = int(user_mesg)
         while intgr7 > 0:
             k = intgr7 % 7
             r = digits_seven[k] + r
@@ -226,22 +234,24 @@ def sevtn(message):
         t = bot.send_message(message.chat.id, 'Схоже ви ввели число не вірно, спробуйте ввести його ще раз:')
         bot.register_next_step_handler(t, sevtn)
 
+
 def octal(message):
     try:
-        octl = message.text
-        intgr8 = int(octl)
+        user_mesg = message.text
+        intgr8 = int(user_mesg)
         con_oct = oct(intgr8)
         bot.send_message(message.chat.id, f'Ваше вісімкове число - {con_oct[2:]}')
     except Exception:
         t = bot.send_message(message.chat.id, 'Схоже ви ввели число не вірно, спробуйте ввести його ще раз:')
         bot.register_next_step_handler(t, octal)
 
+
 def nintn(message):
     try:
         digits_nine = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
         r = ""
-        ninet = message.text
-        intgr9 = int(ninet)
+        user_mesg = message.text
+        intgr9 = int(user_mesg)
         while intgr9 > 0:
             k = intgr9 % 9
             r = digits_nine[k] + r
@@ -251,12 +261,13 @@ def nintn(message):
         t = bot.send_message(message.chat.id, 'Схоже ви ввели число не вірно, спробуйте ввести його ще раз:')
         bot.register_next_step_handler(t, nintn)
 
+
 def eleven(message):
     try:
         digits_eleven = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
         r = ""
-        elvn = message.text
-        intgr11 = int(elvn)
+        user_mesg = message.text
+        intgr11 = int(user_mesg)
         while intgr11 > 0:
             k = intgr11 % 11
             r = digits_eleven[k] + r
@@ -266,12 +277,13 @@ def eleven(message):
         t = bot.send_message(message.chat.id, 'Схоже ви ввели число не вірно, спробуйте ввести його ще раз:')
         bot.register_next_step_handler(t, eleven)
 
+
 def twelve(message):
     try:
         digits_twelve = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
         r = ""
-        twlv = message.text
-        intgr12 = int(twlv)
+        user_mesg = message.text
+        intgr12 = int(user_mesg)
         while intgr12 > 0:
             k = intgr12 % 12
             r = digits_twelve[k] + r
@@ -281,12 +293,13 @@ def twelve(message):
         t = bot.send_message(message.chat.id, 'Схоже ви ввели число не вірно, спробуйте ввести його ще раз:')
         bot.register_next_step_handler(t, twelve)
 
+
 def threetn(message):
     try:
         digits_threetn = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
         r = ""
-        thrtn = message.text
-        intgr13 = int(thrtn)
+        user_mesg = message.text
+        intgr13 = int(user_mesg)
         while intgr13 > 0:
             k = intgr13 % 13
             r = digits_threetn[k] + r
@@ -296,22 +309,24 @@ def threetn(message):
         t = bot.send_message(message.chat.id, 'Схоже ви ввели число не вірно, спробуйте ввести його ще раз:')
         bot.register_next_step_handler(t, twelve)
 
+
 def hexadecimal(message):
     try:
-        hexad = message.text
-        intgr16 = int(hexad)
+        user_mesg = message.text
+        intgr16 = int(user_mesg)
         con_hex = hex(intgr16)
         bot.send_message(message.chat.id, f'Ваше шістнадцяткове число - {con_hex[2:].upper()}')
     except Exception:
         t = bot.send_message(message.chat.id, 'Схоже ви ввели число не вірно, спробуйте ввести його ще раз:')
         bot.register_next_step_handler(t, hexadecimal)
 
+
 def twenty(message):
     try:
         digits_twenty = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
         r = ""
-        twnt = message.text
-        intgr20 = int(twnt)
+        user_mesg = message.text
+        intgr20 = int(user_mesg)
         while intgr20 > 0:
             k = intgr20 % 20
             r = digits_twenty[k] + r
@@ -324,14 +339,15 @@ def twenty(message):
 
 def gray(message):
     try:
-        gr_cod = message.text
-        d_num = int(gr_cod)
+        user_mesg = message.text
+        d_num = int(user_mesg)
         grey_code = (d_num ^ (d_num >> 1))
         b_num = bin(grey_code)
         bot.send_message(message.chat.id, f'Ваша комбінація для коду Ґрея - {b_num[2:]}')
     except Exception:
         sender = bot.send_message(message.chat.id, 'Схоже ви ввели число не вірно, спробуйте ввести його ще раз:')
         bot.register_next_step_handler(sender, gray)
+
 
 def check_even_code(message):
     try:
@@ -349,6 +365,7 @@ def check_even_code(message):
     except Exception:
         sender = bot.send_message(message.chat.id, 'Схоже ви ввели число не вірно, спробуйте ввести його ще раз:')
         bot.register_next_step_handler(sender, check_even_code)
+
 
 def inverse_code(message):
     try:
@@ -369,6 +386,7 @@ def inverse_code(message):
         sender = bot.send_message(message.chat.id, 'Схоже ви ввели число не вірно, спробуйте ввести його ще раз:')
         bot.register_next_step_handler(sender, inverse_code)
 
+
 def corelation_code(message):
     try:
         bot_mesg = ''
@@ -384,6 +402,7 @@ def corelation_code(message):
     except Exception:
         sender = bot.send_message(message.chat.id, 'Схоже ви ввели число не вірно, спробуйте ввести його ще раз:')
         bot.register_next_step_handler(sender, inverse_code)
+
 
 def repetition_code(message):
     try:
@@ -405,6 +424,7 @@ def cipher_caesar_key(message):
     except Exception:
         sender = bot.send_message(message.chat.id, 'Схоже ви ввели число не вірно, спробуйте ввести його ще раз:')
         bot.register_next_step_handler(sender, cipher_caesar_key)
+
 
 def cipher_caesar_coder(message):
     alphabet = 'абвгґдеєжзиіїйклмнопрстуфчцчшщьюя абвгґдеєжзиіїйклмнопрстуфчцчшщьюя '
@@ -432,6 +452,7 @@ def cipher_vijener_key(message):
         sender = bot.send_message(message.chat.id, 'Схоже ви ввели число не вірно, спробуйте ввести його ще раз:')
         bot.register_next_step_handler(sender, cipher_vijener_key)
 
+
 def cipher_vijener_coder(message):
     alphabet = "абвгґдеєжзиіїйклмнопрстуфчцчшщьюя "
 
@@ -450,5 +471,24 @@ def cipher_vijener_coder(message):
             i += 1
 
     bot.send_message(message.chat.id, f'Ваше повідомлення - {encrypted}')
+
+
+def cipher_atbash_coder(message):
+    user_mesg = message.text
+    lookup_table = {'а': 'я', 'б': 'ю', 'в': 'ь', 'г': 'щ', 'ґ': 'ш',
+                    'д': 'ч', 'е': 'ц', 'є': 'х', 'ж': 'ф', 'з': 'у',
+                    'и': 'т', 'і': 'с', 'ї': 'р', 'й': 'п', 'к': 'о',
+                    'л': 'н', 'м': 'м', 'н': 'л', 'о': 'к', 'п': 'й',
+                    'р': 'ї', 'с': 'і', 'т': 'и', 'у': 'з', 'ф': 'ж',
+                    'х': 'є', 'ц': 'е', 'ч': 'д', 'ш': 'ґ', 'щ': 'г',
+                    'ь': 'в', 'ю': 'б', 'я': 'а'}
+    cipher = ''
+    for letter in user_mesg:
+        if letter != ' ':
+            cipher += lookup_table[letter]
+        else:
+            cipher += ' '
+    bot.send_message(message.chat.id, f'Ваше повідомлення - {cipher}')
+
 
 bot.polling(none_stop=True)

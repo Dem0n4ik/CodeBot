@@ -12,7 +12,9 @@ def start(message):
     item1 = types.KeyboardButton("🔒 Кодувати")
     markup.add(item1)
     bot.send_message(message.chat.id, 'Привіт!👋 \nНатисни: \n'
-                                      'Кодувати - для кодування числа та шифрування повідомлення', reply_markup=markup)
+                                      '*Кодувати* - для кодування числа та шифрування повідомлення',
+                     reply_markup=markup,
+                     parse_mode='Markdown', )
 
 
 @bot.message_handler(content_types=["text"])
@@ -28,7 +30,9 @@ def inline_menu(message):
         )
         bot.send_message(message.chat.id, 'Виберіть тип кодування', reply_markup=keyboards)
 
-@bot.callback_query_handler(lambda query: query.data in ["coder", "cipher", "code_syst", "decoder", "decipher", "decode_syst"])
+
+@bot.callback_query_handler(
+    lambda query: query.data in ["coder", "cipher", "code_syst", "decoder", "decipher", "decode_syst"])
 def check_callback_data(callback):
     if callback.data == 'code_syst':
         keyboard = telebot.types.InlineKeyboardMarkup()
@@ -56,8 +60,11 @@ def check_callback_data(callback):
         keyboard.row(
             types.InlineKeyboardButton('◀️', callback_data='back_1')
         )
-        bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id, text="Виберіть систему числення",
-                              reply_markup=keyboard)
+        bot.edit_message_text(chat_id=callback.message.chat.id,
+                              message_id=callback.message.id,
+                              text="_Виберіть систему числення_",
+                              reply_markup=keyboard,
+                              parse_mode='Markdown')
 
     elif callback.data == 'coder':
         keyboard = types.InlineKeyboardMarkup()
@@ -75,8 +82,11 @@ def check_callback_data(callback):
         keyboard.row(
             types.InlineKeyboardButton('◀️', callback_data='back_2')
         )
-        bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id, text="Виберіть код",
-                              reply_markup=keyboard)
+        bot.edit_message_text(chat_id=callback.message.chat.id,
+                              message_id=callback.message.id,
+                              text="_Виберіть код_",
+                              reply_markup=keyboard,
+                              parse_mode='Markdown')
 
     elif callback.data == 'cipher':
         keyboard = types.InlineKeyboardMarkup()
@@ -90,14 +100,19 @@ def check_callback_data(callback):
         keyboard.row(
             types.InlineKeyboardButton('◀️', callback_data='back_3')
         )
-        bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id, text="Виберіть шифр",
-                              reply_markup=keyboard)
+        bot.edit_message_text(chat_id=callback.message.chat.id,
+                              message_id=callback.message.id,
+                              text="_Виберіть шифр_",
+                              reply_markup=keyboard,
+                              parse_mode='Markdown')
 
 
 @bot.callback_query_handler(lambda query: query.data in ["code_2", "code_3", "code_4", "code_5", "code_6", "code_7",
                                                          "code_8", "code_9", "code_11", "code_12", "code_13", "code_16",
-                                                         "code_20", "code_g", "code_k", "code_in", "code_zp", "code_zpp",
-                                                         "cipher_c", "cipher_v", "cipher_a", "back_1", "back_2", "back_3"])
+                                                         "code_20", "code_g", "code_k", "code_in", "code_zp",
+                                                         "code_zpp",
+                                                         "cipher_c", "cipher_v", "cipher_a", "back_1", "back_2",
+                                                         "back_3"])
 def callback_query_butns(callback):
     if callback.data == 'back_1':
         keyboard = telebot.types.InlineKeyboardMarkup()
@@ -108,7 +123,8 @@ def callback_query_butns(callback):
             types.InlineKeyboardButton('Коди', callback_data='coder'),
             types.InlineKeyboardButton('Шифри', callback_data='cipher')
         )
-        bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id, text="Виберіть тип кодування",
+        bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
+                              text="Виберіть тип кодування",
                               reply_markup=keyboard)
 
     elif callback.data == 'back_2':
@@ -120,7 +136,8 @@ def callback_query_butns(callback):
             types.InlineKeyboardButton('Коди', callback_data='coder'),
             types.InlineKeyboardButton('Шифри', callback_data='cipher')
         )
-        bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id, text="Виберіть тип кодування",
+        bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
+                              text="Виберіть тип кодування",
                               reply_markup=keyboard)
 
     elif callback.data == 'back_3':
@@ -132,7 +149,8 @@ def callback_query_butns(callback):
             types.InlineKeyboardButton('Коди', callback_data='coder'),
             types.InlineKeyboardButton('Шифри', callback_data='cipher')
         )
-        bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id, text="Виберіть тип кодування",
+        bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.id,
+                              text="Виберіть тип кодування",
                               reply_markup=keyboard)
 
     elif callback.data == 'code_2':
